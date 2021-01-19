@@ -2,4 +2,7 @@
 
 export("%>%")
 export(facettize)
+export(str_append)
+export(str_prepend)
+export(str_surround)
 importFrom(magrittr,"%>%")
