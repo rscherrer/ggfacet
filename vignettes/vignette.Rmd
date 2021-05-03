@@ -1,0 +1,126 @@
+---
+title: "ggfacet: facets in ggplot2"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`ggfacet` is a simple package providing a wrapper around `ggplot2`'s facetting functions `facet_grid` and `facet_wrap`.
+
+```{r setup}
+library(tidyverse)
+library(ggfacet)
+```
+
+The main interest of `ggfacet` is that it can do this:
+
+```{r, fig.width=5}
+facettize(
+  
+  iris %>%
+    mutate(Species = as.numeric(factor(Species))) %>%
+    ggplot(aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+    theme_classic() +
+    geom_point() +
+    theme(legend.position = "none"),
+  
+  cols = "Species",
+  prepend = "alpha==",
+  parsed = "Species"
+  
+)
+```
+
+It basically facilitates mathematical notation into facet strips, as the regular `ggplot2` workflow can be a little tedious if you want to parse the strips of the facets as plotmath expressions (e.g. with greek letters).
+
+Other than that, `facettize` is the main function of the package and expects (1) a `ggplot` object to split into facets, (2) a `rows` and/or `cols` argument containing the quoted names of the variables to facet by. For example:
+
+```{r, fig.width=5}
+facettize(
+  
+  iris %>%
+    mutate(
+      Size = ifelse(Petal.Length > mean(Petal.Length), "large", "small")
+    ) %>%
+    ggplot(aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+    theme_classic() +
+    geom_point() +
+    theme(legend.position = "none"),
+  
+  rows = "Size",
+  cols = "Species"
+  
+)
+```
+ 
+ Multiple variables can be combined, in rows or in columns, e.g.
+ 
+```{r, fig.width=5}
+facettize(
+  
+  iris %>%
+    mutate(
+      Size = ifelse(Petal.Length > mean(Petal.Length), "large", "small")
+    ) %>%
+    ggplot(aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+    theme_classic() +
+    geom_point() +
+    theme(legend.position = "none"),
+  
+  cols = c("Species", "Size")
+  
+)
+```
+
+In order to use `facet_wrap` instead of `facet_grid`, set `wrap = TRUE`. This way the function will not care about whether facetting variables are provided in rows or columns. 
+
+```{r, fig.width=5, fig.height=4}
+facettize(
+  
+  iris %>%
+    mutate(
+      Size = ifelse(Petal.Length > mean(Petal.Length), "large", "small")
+    ) %>%
+    ggplot(aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+    theme_classic() +
+    geom_point() +
+    theme(legend.position = "none"),
+  
+  rows = "Size",
+  cols = "Species",
+  wrap = TRUE
+  
+)
+```
+
+Last but not least, you can choose which facetting variables must be parsed as plotmath expressions:
+
+```{r, fig.width=5}
+facettize(
+  
+  iris %>%
+    mutate(
+      Species = as.numeric(factor(Species)),
+      Size = ifelse(Petal.Length > mean(Petal.Length), "large", "small")
+    ) %>%
+    ggplot(aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+    theme_classic() +
+    geom_point() +
+    theme(legend.position = "none"),
+  
+  rows = "Size",
+  cols = "Species",
+  prepend = "alpha==",
+  parsed = "Species"
+  
+)
+```

@@ -1,7 +1,7 @@
 Package: ggfacet
 Type: Package
 Title: Handy Facetting for ggplot2
-Version: 0.1.0
+Version: 1.0
 Author: Raphael Scherrer
 Maintainer: Raphael Scherrer <r.scherrer@rug.nl> <raphael.scherrer@evobio.eu>
 Description: Wrapper around ggplot2's facetting functions that allow splitting
@@ -16,3 +16,7 @@ Imports:
     stringr,
     ggplot2,
     magrittr
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
